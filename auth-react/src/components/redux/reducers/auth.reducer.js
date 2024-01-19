@@ -13,11 +13,11 @@ const authReducer = (state = INITIAL_STATE, action) => {
     case 'register_ko':
       return { ...state, error: action.payload, isLoading: false };
     case 'login_user':
-      return;
+      return { ...state, isLoading: true };
     case 'login_user_ok':
-      return;
+      return { ...state, msj: action.payload, error: null, isLoading: false }
     case 'login_user_ko':
-      return;
+      return { ...state, error: action.payload, isLoading: false };
     case 'logout_user':
       return;
     default:
