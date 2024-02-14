@@ -35,8 +35,37 @@ const login = async (req, res) => {
     const token = generateToken(userDB._id, userDB.email)
     return res.status(200).json({ success: true, data: "Se ha logueado", token: token })
 }
-const profile = () => {
-
+const profile = (req, res) => {
+    // devuelve la respuesta al front
+    console.log(req.user);
+    return res.status(200).json({ success: true, data: req.user })
 }
 
-module.exports = { register, login, profile }
+const getUsers = async (req, res) => {
+    // devuelve  todos los usuarios de bD, si el que inicio la sesion es un admin
+
+    const numUsers = await User.countDocuments(); 15
+    let { page } = req.query; 3
+    const limit = 3;
+    page = parseInt(page)
+    const numPage = Math.ceil(numUsers / limit);
+
+    if (page <= 0) {
+        page = 1;
+    }
+    if (page > numPage) {
+        page = 1 // page= numPage
+    }
+    if (isNaN(page)) {
+        page = 4;
+    }
+    const skipUser = (page - 1) * limit;
+    const allUsers = await User.find().skip(skipUser).limit(limit)
+
+    const nextPage = page === numPage ? null : page + 1;
+    const prevPage = page === 1 ? null : page - 1;
+
+    console.log(nextPage, prevPage)
+    return res.status(200).json({ success: true, users: allUsers, nextpage: nextPage, prevPage: prevPage })
+}
+module.exports = { register, login, profile, getUsers }

@@ -5,6 +5,7 @@ const generateToken = (id, email) => {
 }
 const validateToken = (token) => {
     return jwt.verify(token, process.env.SECRETE_JWT)
+    //SECRETE_JWT es una clase secreta que me invento 
 }
 
 module.exports = { generateToken, validateToken }
